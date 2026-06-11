@@ -1,37 +1,61 @@
 "use client";
 
-import { login } from "@/src/services/authService";
-import {Check} from "@gravity-ui/icons";
+import { login as loginAPI } from "@/src/services/authService";
+import { useAuth } from "@/src/context/AuthContext";
 import {Button, Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
+import { useSearchParams } from "next/navigation";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 
 export default function PageLogin(){
+  
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError ]= useState("")
+  const { login } = useAuth();
+  const searchParams = useSearchParams();
+  
 
   const handleSubmit =async ()=>{
+    console.log("ESTADO name:", name)  // ← agregar esto
+    console.log("ESTADO email:", email)
+    console.log("ESTADO password:", password)
     setLoading(true);
+    console.log("VALORES:", { name, email, password })
     if(!email || !password){
         setError("Todos los campos son obligatorios")
+        setLoading(false)
         return
       }
       if(password.length < 6){
         setError("La contraseña debe tener 6 caracteres")
+        setLoading(false)
+        return
       }
     try{
-      const result =await login(email, password);
+      const result =await loginAPI(email, password);
+       login(result.user)
       console.log(result)
       // if(!result.user)
-      router.push("/")
+      await Swal.fire({
+                  title:"Bienvenido",
+                  icon:"success",
+                  timer:2000,
+                  showConfirmButton:false
+                })
+                const returnTo = searchParams.get("returnTo") || "/";
+      // router.push("/")
+          router.push(returnTo)
     }catch(error){
         setError("Error al iniciar sesión");
         console.error(error)
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -66,7 +90,7 @@ export default function PageLogin(){
       <Form
         className="flex flex-col gap-6"
         render={(props) => <form {...props} />}
-        onSubmit={onSubmit}
+        // onSubmit={onSubmit}
       >
         <TextField isRequired name="email" type="email">
           <Label className="text-gray-600 font-medium">
@@ -112,7 +136,7 @@ export default function PageLogin(){
         </TextField>
 
         <Button
-          type="submit"
+          type="button"
           onClick={handleSubmit}
         isDisabled={loading}
           className="mt-4 h-14 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700"

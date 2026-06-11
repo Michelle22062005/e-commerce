@@ -2,11 +2,13 @@ import { Button, Card } from "@heroui/react"
 import Link from "next/link"
 import {ShoppingCart} from '@gravity-ui/icons';
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/src/context/AuthContext";
 
 
 
 
 export const NavbarHome = ()=>{
+  const {user, logout}=useAuth()
   const router= useRouter()
 
   const login=()=>{
@@ -50,19 +52,22 @@ export const NavbarHome = ()=>{
         </button>
 
         {/* Carrito */}
-        <div className="relative">
-          <ShoppingCart className="width={40} height={40} text-blue-600" />
-
-          {/* <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-            3
-          </span> */}
+        {user ? (
+          <div className="flex items-center gap-4">
+           <span className="text-black">Hola, {user.name}</span>
+          <ShoppingCart width={40} height={40} className="text-blue-600" />
+          <Button variant="danger" onClick={logout}>Salir</Button>
         </div>
-
+        ) : (
+          <Button onPress={login}>Iniciar sesion</Button>
+        )}
+        
+{/* 
             <div className="flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2">
-              <Button onPress={login}>Iniciar sesion</Button>
-              <Button variant="danger">Salir</Button>
+              
+              
 
-            </div>
+            </div> */}
         {/* Usuario */}
         {/* <div className="flex items-center gap-2 rounded-full bg-gray-100 px-4 py-2">
           <div className="flex items-center justify-center w-7 h-7 rounded-full border-2 border-blue-600 text-blue-600">

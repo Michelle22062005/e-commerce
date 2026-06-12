@@ -52,6 +52,7 @@ export const NavbarHome = ()=>{
         </button>
 
         {/* Carrito */}
+        <ShoppingCart width={40} height={40} className="text-blue-600" />
         {user ? (
           <div className="flex items-center gap-4">
            <span className="text-black">Hola, {user.name}</span>

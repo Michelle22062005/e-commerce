@@ -73,7 +73,7 @@ export default function PageLogin(){
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#cfefed]">
+    <div className="min-h-screen flex items-center justify-center ">
   <div className="w-full max-w-md">
     {/* Título */}
     <div className="text-center mb-10">

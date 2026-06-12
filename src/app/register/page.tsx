@@ -56,21 +56,9 @@ export default function PageRegister(){
         }
       }
     
-      // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      //   e.preventDefault();
-      //   const formData = new FormData(e.currentTarget);
-      //   const data: Record<string, string> = {};
-    
-      //   // Convert FormData to plain object
-      //   formData.forEach((value, key) => {
-      //     data[key] = value.toString();
-      //   });
-    
-      //   alert(`Form submitted with: ${JSON.stringify(data, null, 2)}`);
-      // };
 
     return(
-         <div className="min-h-screen flex items-center justify-center bg-[#cfefed]">
+         <div className="min-h-screen flex items-center justify-center ">
           <div className="w-full max-w-md">
             {/* Título */}
             <div className="text-center mb-10">
@@ -165,6 +153,7 @@ export default function PageRegister(){
                   {loading ? "Cargando..." : "Registrarse →"}
                   
                 </Button>
+                <Button onPress={()=> router.push("/login")}>Iniciar sesion</Button>
         
                 {/* Separador */}
                 <div className="flex items-center gap-4 my-2">

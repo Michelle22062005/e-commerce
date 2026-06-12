@@ -3,32 +3,21 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button, Card, CloseButton, TextArea } from "@heroui/react";
+import { IProductDetail } from "@/src/types/product";
 
-interface todo {
-  title: string;
-  starDate?: number | undefined;
-  endDate?: number | undefined;
-  status: "pending" | "inProgress" | "done";
-  //_id:string
-  //id:string
-  duration?: number;
-  comments: string[];
-  onStart: (_id: string) => void;
-  onFinish: (_id: string) => void;
-  onDelete: (_id: string) => void;
-  onEdit: (_id: string, newTitle: string) => void;
-}
+
 // eslint-disable-next-line @next/next/no-async-client-component
-const DetailsTodoList = () => {
-  const [todo, setTodo] = useState<todo | null>(null);
-  const [comment, setComment] = useState("");
-  const { _id } = useParams();
-  const router=useRouter()
+const DetailsProducts = () => {
+   const [todo, setTodo] = useState<IProductDetail | null>(null);
+   const { _id } = useParams();
+   const router=useRouter()
+   
   
 
 
   const fetchData = async () => {
-    const res = await fetch(`/api/todolist/${_id}`);
+    const res = await fetch(`/api/product/${_id}`);
+    
     console.log("status", res.status);
 
     if (!res.ok) {
@@ -46,7 +35,6 @@ const DetailsTodoList = () => {
     router.push("/")
   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     if (!_id) return;
     fetchData();
@@ -57,54 +45,103 @@ const DetailsTodoList = () => {
  
 
   return (
-    <div className="flex flex-col justify-center gap-5 m-5">
-      <h1 className="text-5xl">{t.TodoDetails}</h1>
-      <Button onPress={backTo}>{t.returnButton}</Button>
-       <LanguageSelector />
-      <Card className="w-full items-stretch md:flex-row bg-[#61b7c1]">
-        <div className="relative h-[140px] w-full shrink-0 overflow-hidden rounded-2xl sm:h-[120px] sm:w-[120px]">
-          <img
-            alt="Cherries"
-            className="pointer-events-none absolute inset-0 h-full w-full scale-125 object-cover select-none"
-            loading="lazy"
-            src="https://d1lzasi9aszbz8.cloudfront.net/n_53_1721074300_Portada.jpg"
-          />
-        </div>
-        <div className="flex flex-1 flex-col gap-3">
-          <Card.Header className="gap-1">
-            <Card.Title className="pr-8 text-4xl text-black uppercase"></Card.Title>
-            <p className="text-3xl uppercase">{todo?.title}</p>
-            <span className="text-blue-200">ID: {_id}</span>
-            <p className="text-black"> {todo?.status ? t.card[todo.status] : ""}</p>
-            <p>Inicio: {todo?.starDate}</p>
-            <p>Fin: {todo?.endDate}</p>
-            {/* <p>Duracion: {todo?.duration}</p> */}
-            {/* <CloseButton aria-label="Close banner" className="absolute top-3 right-3" /> */}
-          </Card.Header>
-          <Card.Description className="flex flex-col">
-           <span className="text-black">
-            {t.card.writeComment}: 
-           </span>
-            <TextArea aria-label="Quick project update" value={comment} onChange={(e) =>setComment(e.target.value)} placeholder="Escriba un comentario" className="border border-2 p-3 rounded-2xl bg-[#bee3f3]"/>
+    <div className="flex flex-col gap-5 m-5 max-w-3xl mx-auto">
 
-            <span>{t.card.comment}:{todo?.comments?.length} </span>
+  {/* Botón volver */}
+  <button
+    onClick={backTo}
+    className="self-start text-sm font-medium px-4 py-2 rounded-xl transition-transform active:scale-[0.97]"
+    style={{ background: "#f7c5a0", color: "#7a3e1e", border: "none" }}
+  >
+    ← Volver
+  </button>
 
-            {todo?.comments && todo?.comments?.length >0
-            ? todo.comments.map((c,i) =>(
-              <li key={i}>
-             {c}
-            </li>
-            )) : <span>{t.card.noComment}</span>}
-            
-          </Card.Description>
-          <Card.Footer className="mt-auto flex w-full flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-      
-            <Button onPress={addComments} className="w-full sm:w-auto">{t.card.saveButton}</Button>
-          </Card.Footer>
-        </div>
-      </Card>
+  <Card
+    style={{
+      background: "#fdf6f0",
+      borderRadius: "20px",
+      border: "0.5px solid #f0d9cc",
+      padding: "24px",
+      gap: "20px",
+    }}
+  >
+    {/* Imagen grande */}
+    <div className="relative w-full h-[320px] rounded-[16px] overflow-hidden">
+      <img
+        alt={todo?.name}
+        className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
+        loading="lazy"
+        src={todo?.imageUrl}
+      />
     </div>
+
+    {/* Info principal */}
+    <Card.Header className="px-0 py-0 flex flex-col gap-1">
+      <Card.Title style={{ fontSize: "26px", color: "#6b4f3a" }}>
+        {todo?.name}
+      </Card.Title>
+      <p style={{ fontSize: "13px", color: "#c4a98a" }}>{todo?.slug}</p>
+      <p style={{ fontSize: "22px", fontWeight: "600", color: "#b07850" }}>
+        ${todo?.price?.toLocaleString("es-CO")}
+      </p>
+    </Card.Header>
+
+    {/* Divider */}
+    <div style={{ borderTop: "1px solid #f0d9cc" }} />
+
+    {/* Descripción corta */}
+    <div className="flex flex-col gap-1">
+      <p style={{ fontSize: "13px", fontWeight: "600", color: "#6b4f3a" }}>
+        Descripción
+      </p>
+      <p style={{ fontSize: "13px", color: "#b07850", lineHeight: "1.6" }}>
+        {todo?.shortDescription}
+      </p>
+    </div>
+
+    {/* Descripción larga */}
+    <div className="flex flex-col gap-1">
+      <p style={{ fontSize: "13px", fontWeight: "600", color: "#6b4f3a" }}>
+        Detalles
+      </p>
+      <p style={{ fontSize: "13px", color: "#b07850", lineHeight: "1.6" }}>
+        {todo?.longDescription}
+      </p>
+    </div>
+
+    {/* Divider */}
+    <div style={{ borderTop: "1px solid #f0d9cc" }} />
+
+    {/* Specs */}
+    <div className="flex flex-col gap-2">
+      <p style={{ fontSize: "13px", fontWeight: "600", color: "#6b4f3a" }}>
+        Especificaciones
+      </p>
+      {todo?.specs &&
+        Object.entries(todo.specs).map(([key, value]) => (
+          <div key={key} className="flex justify-between text-sm">
+            <span style={{ color: "#6b4f3a", textTransform: "capitalize" }}>
+              {key.replace(/_/g, " ")}
+            </span>
+            <span style={{ color: "#b07850" }}>{value}</span>
+          </div>
+        ))}
+    </div>
+
+    {/* Divider */}
+    <div style={{ borderTop: "1px solid #f0d9cc" }} />
+
+    {/* Footer: stock + botón */}
+    <div className="flex items-center justify-between">
+      <span style={{ fontSize: "13px", color: "#c4a98a" }}>
+        Stock disponible:{" "}
+        <strong style={{ color: "#6b4f3a" }}>{todo?.stock}</strong>
+      </span>
+      
+    </div>
+  </Card>
+</div>
   );
 };
 
-export default DetailsTodoList;
+export default DetailsProducts;

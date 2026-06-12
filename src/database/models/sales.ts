@@ -11,9 +11,10 @@ export interface ISale extends Document {
   userId: Types.ObjectId;
   items: ISaleItem[];
   total: number;
-  soldAt: Date;
+  createdAt: Date;
 }
 
+// ← debe definirse antes de SaleSchema
 const SaleItemSchema = new Schema<ISaleItem>(
   {
     productId: {
@@ -51,16 +52,15 @@ const SaleSchema = new Schema<ISale>({
     type: Number,
     required: [true, "The total is required"],
   },
-  soldAt: {
+  createdAt: {
     type: Date,
+    default: Date.now,
   },
 });
 
 export let Sale: Model<ISale>;
 try {
   Sale = model<ISale>("sales");
-} catch (error) {
-  Sale = model("sales", SaleSchema);
+} catch {
+  Sale = model<ISale>("sales", SaleSchema);
 }
-
-export default SaleSchema;

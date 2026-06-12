@@ -14,6 +14,13 @@ export const NavbarHome = ()=>{
   const login=()=>{
     router.push("/login")
   }
+  const shopping = () => {
+    if (!user) {
+      alert("Debes iniciar sesion primero para acceder al carrito");
+      return;
+    }
+    router.push("/shopping");
+  };
   return(
  <nav className="flex items-center justify-between px-10 py-3 bg-white border-b border-gray-200">
       {/* Logo */}
@@ -36,12 +43,6 @@ export const NavbarHome = ()=>{
         <li>
           <Link href="/favorites">Favorites</Link>
         </li>
-        {/* <li>
-          <Link href="/orders">Orders</Link>
-        </li>
-        <li>
-          <Link href="/admin">Admin</Link>
-        </li> */}
       </ul>
 
       {/* Acciones */}
@@ -52,11 +53,11 @@ export const NavbarHome = ()=>{
         </button>
 
         {/* Carrito */}
-        <ShoppingCart width={40} height={40} className="text-blue-600" />
+        {/* <ShoppingCart width={40} height={40} className="text-blue-600" /> */}
         {user ? (
           <div className="flex items-center gap-4">
-           <span className="text-black">Hola, {user.name}</span>
-          <ShoppingCart width={40} height={40} className="text-blue-600" />
+           <span className="text-black"> {user.name}</span>
+          <ShoppingCart width={40} height={40} className="text-blue-600" onClick={shopping}/>
           <Button variant="danger" onClick={logout}>Salir</Button>
         </div>
         ) : (

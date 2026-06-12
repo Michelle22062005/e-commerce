@@ -18,6 +18,11 @@ export const login = async (email:string, password:string)=>{
             body:JSON.stringify({email,password})
         })
         const data = await res.json();
+        // if(res.ok){
+        //     localStorage.setItem("user", JSON.stringify(data.user))
+        //     return true
+        // }
+        // return false
          if (!res.ok) {
             throw new Error(data.error || "Credenciales incorrectas");
         }

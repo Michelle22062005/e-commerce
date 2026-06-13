@@ -43,13 +43,27 @@ export const  createUser = async(name:string, email:string, password:string)=>{
             },
             body: JSON.stringify({name,email,password})
         });
-        const data = await res.json();  // ← agregar esto
+         if(res.ok){
+            const data = await res.json();
+            const emailRes = await fetch("/api/sendemail",{
+                method:"POST",
+                headers:{
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({name, email})
+            });
+            const emailData = await emailRes.json();
+            if(!emailRes.ok){
+                console.error("Error al enviar el correo de notificación", emailData.error);
+            }
+        // const data = await res.json();  // ← agregar esto
 
         if (!res.ok) {
             throw new Error(data.error || "Error al crear el usuario");
         }
-
+        console.log("se envio el correo exitosamente",emailData);
         return data;
+    }
     }catch(error){
         console.error("Error al crear el usuario", error)
     }

@@ -26,7 +26,7 @@ export const NavbarHome = ()=>{
       {/* Logo */}
       <div>
         <h1 className="text-3xl font-bold text-blue-700">
-          DHB-TECH SHOP
+          TIENDA PROD-DM
         </h1>
       </div>
 

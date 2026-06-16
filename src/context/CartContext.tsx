@@ -40,45 +40,36 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [user]);
 
   // Guardar en localStorage cada vez que cambia el carrito
-  const save = (updated: ICartItem[]) => {
+  useEffect(() => {
     if (!user) return;
-    localStorage.setItem(`cart_${user.id}`, JSON.stringify(updated));
-    setCart(updated);
-  };
+    localStorage.setItem(`cart_${user.id}`, JSON.stringify(cart));
+  }, [cart, user]);
 
   const addToCart = (item: ICartItem) => {
     if (!user) return;
     setCart((prev) => {
       const exists = prev.find((i) => i.productId === item.productId);
-      const updated = exists
+      return exists
         ? prev.map((i) =>
             i.productId === item.productId
               ? { ...i, quantity: i.quantity + 1 }
               : i
           )
         : [...prev, { ...item, quantity: 1 }];
-      save(updated);
-      return updated;
     });
   };
 
   const removeFromCart = (productId: string) => {
-    setCart((prev) => {
-      const updated = prev.filter((i) => i.productId !== productId);
-      save(updated);
-      return updated;
-    });
+    setCart((prev) => prev.filter((i) => i.productId !== productId));
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
     if (quantity < 1) return;
-    setCart((prev) => {
-      const updated = prev.map((i) =>
+    setCart((prev) =>
+      prev.map((i) =>
         i.productId === productId ? { ...i, quantity } : i
-      );
-      save(updated);
-      return updated;
-    });
+      )
+    );
   };
 
   const clearCart = () => {

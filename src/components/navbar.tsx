@@ -1,6 +1,6 @@
 import { Button, Card } from "@heroui/react"
 import Link from "next/link"
-import {ShoppingCart} from '@gravity-ui/icons';
+import {ShoppingCart, TrashBin} from '@gravity-ui/icons';
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
 import { LanguageSelector } from "./LanguagesSelector";
@@ -57,7 +57,9 @@ export const NavbarHome = ()=>{
           <div className="flex items-center gap-4">
            <span className="text-black"> {user.name}</span>
           <ShoppingCart width={40} height={40} className="text-blue-600" onClick={shopping}/>
-          <Button variant="danger" onClick={logout}>Salir</Button>
+          <Button isIconOnly variant="danger" onClick={logout}>Salir
+            <TrashBin/>
+          </Button>
         </div>
         ) : (
           <Button onPress={login}>Iniciar sesion</Button>

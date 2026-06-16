@@ -1,9 +1,10 @@
 "use client"
 import { postImg } from "@/src/services/img"
 import { useState, useRef } from "react"
+import Swal from "sweetalert2";
 
 const LoadImg = () => {
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("")
   const [description, setDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -17,8 +18,17 @@ const LoadImg = () => {
 
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTitle("")
+    setDescription("")
+    setPreview("")
     try {
       const resp = await postImg(title, description, file);
+      await Swal.fire({
+        title:"la imagen se subio correctamente",
+        icon:"success",
+        timer:2000,
+        showConfirmButton:false
+      })
       console.log(resp);
     } catch (error) {
       console.error(error);

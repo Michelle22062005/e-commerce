@@ -4,11 +4,13 @@ import { IProductCard } from "../types/product";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
 import { useCart } from "../context/CartContext";
+import { useTranslation } from "@/src/context/i18nContext";
 
 export const ProductCard = ({ _id, name, imageUrl, price }: IProductCard) => {
   const router = useRouter();
   const {isFavorite, toggleFavorite, user, authMessage } = useAuth();
   const { addToCart } = useCart();
+  const {t} = useTranslation()
 
 
   const ver = () => {
@@ -92,10 +94,10 @@ export const ProductCard = ({ _id, name, imageUrl, price }: IProductCard) => {
           className="w-full py-2 text-sm font-medium rounded-xl transition-transform active:scale-[0.97]"
           style={{ background: "#f7c5a0", color: "#7a3e1e", border: "none" }}
         >
-          Agregar al carrito
+          {t.card.addCart}
         </button>
         <Button className="bg-[#9c7350]"
-        onPress={ver}>Ver mas</Button>
+        onPress={ver}>{t.card.see}</Button>
       </Card>
     </div>
   );

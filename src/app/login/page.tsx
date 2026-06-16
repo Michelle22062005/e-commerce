@@ -4,10 +4,11 @@ import { login as loginAPI } from "@/src/services/authService";
 import { useAuth } from "@/src/context/AuthContext";
 import {Button, Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
 import { useSearchParams } from "next/navigation";
-
+import { useTranslation } from "@/src/context/i18nContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { LanguageSelector } from "@/src/components/LanguagesSelector";
 
 
 export default function PageLogin(){
@@ -19,7 +20,7 @@ export default function PageLogin(){
   const [error, setError ]= useState("")
   const { login } = useAuth();
   const searchParams = useSearchParams();
-  
+  const {t} = useTranslation()
 
   const handleSubmit =async ()=>{
     console.log("ESTADO name:", name)  // ← agregar esto
@@ -78,11 +79,12 @@ export default function PageLogin(){
     {/* Título */}
     <div className="text-center mb-10">
       <h1 className="text-5xl font-bold text-gray-900">
-        Bienvenido de nuevo
+        {t.welcome}
       </h1>
       <p className="mt-3 text-gray-500">
-        Accede a tu cuenta de DHB-TECH SHOP
+        {t.accessAccount} PROD-DM SHOP
       </p>
+      <LanguageSelector/>
     </div>
 
     {/* Card */}
@@ -94,7 +96,7 @@ export default function PageLogin(){
       >
         <TextField isRequired name="email" type="email">
           <Label className="text-gray-600 font-medium">
-            Email
+            {t.email}
           </Label>
           <Input
             placeholder="nombre@ejemplo.com"
@@ -113,15 +115,15 @@ export default function PageLogin(){
         >
           <div className="flex justify-between">
             <Label className="text-gray-600 font-medium">
-              Contraseña
+              {t.password}
             </Label>
 
-            <button
+            {/* <button
               type="button"
               className="text-indigo-500 text-sm font-medium"
             >
               ¿Olvidaste tu contraseña?
-            </button>
+            </button> */}
           </div>
 
           <Input
@@ -141,15 +143,15 @@ export default function PageLogin(){
         isDisabled={loading}
           className="mt-4 h-14 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700"
         >
-          {loading ? "Cargando..." : "Iniciar Sesión →"}
+          {loading ? "Cargando..." : `  ${t.login}→` }
           
         </Button>
 
         {/* Separador */}
         <div className="flex items-center gap-4 my-2">
           <div className="h-px flex-1 bg-gray-200" />
-          <span className="text-sm text-gray-500">
-            O CONTINUAR CON
+          <span className="text-sm uppercase text-gray-500">
+            {t.continueWith}
           </span>
           <div className="h-px flex-1 bg-gray-200" />
         </div>
@@ -166,12 +168,12 @@ export default function PageLogin(){
         </div>
 
         <p className="text-center text-gray-600 mt-4">
-          ¿No tienes una cuenta?{" "}
+          {t.dontAccount}{" "}
           <a
             href="/register"
             className="font-semibold text-indigo-600"
           >
-            Crear una cuenta
+            {t.createAccount}
           </a>
         </p>
       </Form>

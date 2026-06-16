@@ -4,6 +4,7 @@ import {ShoppingCart, TrashBin} from '@gravity-ui/icons';
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
 import { LanguageSelector } from "./LanguagesSelector";
+import { useTranslation } from "@/src/context/i18nContext";
 
 
 
@@ -11,6 +12,7 @@ import { LanguageSelector } from "./LanguagesSelector";
 export const NavbarHome = ()=>{
   const {user, logout}=useAuth()
   const router= useRouter()
+  const {t}= useTranslation()
 
   const login=()=>{
     router.push("/login")
@@ -38,11 +40,11 @@ export const NavbarHome = ()=>{
             href="/"
             className="text-blue-600 border-b-2 border-blue-600 pb-1"
           >
-            Catalog
+            {t.catalog}
           </Link>
         </li>
         <li>
-          <Link href="/favorites">Favorites</Link>
+          <Link href="/favorites">{t.favorite}</Link>
         </li>
       </ul>
 
@@ -62,7 +64,7 @@ export const NavbarHome = ()=>{
           </Button>
         </div>
         ) : (
-          <Button onPress={login}>Iniciar sesion</Button>
+          <Button onPress={login}>{t.login}</Button>
         )}
         
 {/* 

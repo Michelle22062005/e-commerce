@@ -1,11 +1,16 @@
 import axios from "axios"
 
-export const postImg = async (title:string, description:string, file: File)=>{
+export interface imgProps{
+  title: string;
+  description: string;
+  img: File | null;
+}
+export const postImg = async (title:string, description:string, img: File | null)=>{
     try{
         const formData = new FormData();
         formData.append("title", title);
         formData.append("description", description);
-        formData.append("img", file);
+        formData.append("img", img);
 
         const res = await axios.post("/api/img", formData)
 

@@ -1,7 +1,8 @@
 "use client"
 
 import { useAuth } from "@/src/context/AuthContext";
-
+import { LanguageSelector } from "@/src/components/LanguagesSelector";
+import { useTranslation } from "@/src/context/i18nContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createUser } from "@/src/services/authService";
@@ -16,6 +17,7 @@ export default function PageRegister(){
       const [password, setPassword] = useState("");
       const [loading, setLoading] = useState(false);
       const [error, setError ]= useState("")
+      const {t}=useTranslation()
     
       const handleSubmit =async ()=>{
         console.log("ESTADO name:", name)  // ← agregar esto
@@ -66,8 +68,9 @@ export default function PageRegister(){
                 Bienvenido 
               </h1>
               <p className="mt-3 text-gray-500">
-                Registra tu cuenta de DHB-TECH SHOP
+                {t.registerAccount} PROD-DM SHOP
               </p>
+              <LanguageSelector/>
             </div>
         
             {/* Card */}
@@ -78,21 +81,9 @@ export default function PageRegister(){
                
                 // onSubmit={onSubmit}
               >
-                {/* <TextField isRequired name="name" type="text">
-                  <Label className="text-gray-600 font-medium">
-                    Full Name
-                  </Label>
-                  <Input
-                    placeholder="Pepito Perez"
-                    value={name}
-                    type="text"                
-                     onChange={(e)=> setName(e.target.value)}
-                    className="mt-2 h-14 rounded-xl bg-gray-100 border-0"
-                  />
-                  <FieldError />
-                </TextField> */}
+               
                 <Label className="text-gray-600 font-medium">
-                    Full Name
+                    {t.fullName}
                   </Label>
                   <Input
                     placeholder="Pepito Perez"
@@ -103,7 +94,7 @@ export default function PageRegister(){
                   />
                 <TextField isRequired name="email" type="email">
                   <Label className="text-gray-600 font-medium">
-                    Email
+                    {t.email}
                   </Label>
                   <Input
                     placeholder="nombre@ejemplo.com"
@@ -122,15 +113,15 @@ export default function PageRegister(){
                 >
                   <div className="flex justify-between">
                     <Label className="text-gray-600 font-medium">
-                      Contraseña
+                      {t.password}
                     </Label>
         
-                    <button
+                    {/* <button
                       type="button"
                       className="text-indigo-500 text-sm font-medium"
                     >
                       ¿Olvidaste tu contraseña?
-                    </button>
+                    </button> */}
                   </div>
         
                   <Input
@@ -153,13 +144,13 @@ export default function PageRegister(){
                   {loading ? "Cargando..." : "Registrarse →"}
                   
                 </Button>
-                <Button onPress={()=> router.push("/login")}>Iniciar sesion</Button>
+                <Button onPress={()=> router.push("/login")}>{t.login}</Button>
         
                 {/* Separador */}
                 <div className="flex items-center gap-4 my-2">
                   <div className="h-px flex-1 bg-gray-200" />
-                  <span className="text-sm text-gray-500">
-                    O CONTINUAR CON
+                  <span className="text-sm uppercase text-gray-500">
+                    {t.continueWith}
                   </span>
                   <div className="h-px flex-1 bg-gray-200" />
                 </div>

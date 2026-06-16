@@ -35,6 +35,7 @@ export async function POST(req:Request){
             password:hashedPassword
         })
 
+
         // const user = await User.find({email})
         // if(!user){
         //     return Response.json({error:"Credenciales incorrectas email"},{status:401})
@@ -46,7 +47,7 @@ export async function POST(req:Request){
             message:"El usuario fue creado correctamente"
         })
     }catch(error){
-         console.error("[POST /authentication]", error);
+         console.error("[POST /register]", error);
         return Response.json({error:"Error al crear el usuario"},{status:500})
     }
 }

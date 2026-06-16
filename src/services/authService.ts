@@ -36,15 +36,15 @@ export const login = async (email:string, password:string)=>{
 
 export const  createUser = async(name:string, email:string, password:string)=>{
     try{
-        const res= await fetch("/api/authentication",{
+        const res= await fetch("/api/register",{
             method:"POST",
             headers:{
                 "Content-Type":"application/json"
             },
             body: JSON.stringify({name,email,password})
         });
+        const data = await res.json();
          if(res.ok){
-            const data = await res.json();
             const emailRes = await fetch("/api/sendemail",{
                 method:"POST",
                 headers:{
@@ -66,5 +66,6 @@ export const  createUser = async(name:string, email:string, password:string)=>{
     }
     }catch(error){
         console.error("Error al crear el usuario", error)
+        throw error;
     }
 }

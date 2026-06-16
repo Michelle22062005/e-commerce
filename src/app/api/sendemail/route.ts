@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 export async function POST(request: NextRequest) {
+    console.log("SENDEMAIL HIT")
   try {
     const { name, email } = await request.json();
-
+     console.log("DATOS RECIBIDOS:", name, email)
     const userMail = process.env.MAIL_USER;
     const passMail = process.env.MAIL_PASS;
 
@@ -29,150 +30,182 @@ export async function POST(request: NextRequest) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro Exitoso</title>
+  <title>Bienvenida</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background-color: #121212;
+      background-color: #fdf0e8;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #e0e0e0;
+      color: #6b4f3a;
     }
     .email-container {
       max-width: 600px;
       margin: 40px auto;
-      background-color: #1e1e1e;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 191, 0, 0.1);
+      background-color: #fdf6f0;
+      border-radius: 20px;
+      border: 1px solid #f0d9cc;
       overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 20px rgba(176, 120, 80, 0.1);
     }
     .header {
-      background-color: #1b1b1b;
-      padding: 30px;
+      background-color: #f7c5a0;
+      padding: 32px 30px;
       text-align: center;
-      border-bottom: 2px solid #ffbf00;
+      border-bottom: 1px solid #f0d9cc;
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: 900;
+      color: #7a3e1e;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .logo span {
+      color: #c4a98a;
+    }
+    .header-sub {
+      font-size: 11px;
+      color: #b07850;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-top: 6px;
     }
     .content {
-      padding: 40px 30px;
+      padding: 40px 36px;
     }
-    .welcome-text {
-      font-size: 11px;
+    .badge {
+      display: inline-block;
+      background-color: #f7c5a0;
+      color: #7a3e1e;
+      font-size: 10px;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.2em;
-      color: #ffbf00;
-      font-weight: bold;
-      margin-bottom: 10px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
     }
     h1 {
       font-size: 24px;
-      font-weight: 900;
-      color: #ffffff;
-      margin: 0 0 20px 0;
+      font-weight: 800;
+      color: #6b4f3a;
+      margin: 0 0 16px 0;
+      line-height: 1.3;
     }
     p {
-      font-size: 15px;
-      line-height: 1.6;
-      color: #a0a0a0;
-      margin: 0 0 20px 0;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #b07850;
+      margin: 0 0 16px 0;
     }
     .user-box {
-      background-color: #161616;
-      border-left: 4px solid #ffbf00;
-      padding: 15px;
-      margin-bottom: 30px;
-      border-radius: 0 8px 8px 0;
+      background-color: #fff8f4;
+      border-left: 4px solid #f7c5a0;
+      padding: 18px 20px;
+      margin: 24px 0;
+      border-radius: 0 12px 12px 0;
     }
-    .user-box div {
-      font-size: 14px;
-      margin-bottom: 5px;
+    .user-box-row {
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: #b07850;
     }
-    .user-box strong {
-      color: #ffffff;
+    .user-box-row:last-child {
+      margin-bottom: 0;
     }
-    .link{
-      text-decoration: none;
-      color: #101010;
+    .user-box-row strong {
+      color: #6b4f3a;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid #f0d9cc;
+      margin: 28px 0;
     }
     .btn-container {
       text-align: center;
-      margin-bottom: 30px;
+      margin: 28px 0;
     }
     .btn {
       display: inline-block;
-      background-color: #e8c71f;
-      color: #121212;
-      font-weight: bold;
+      background-color: #f7c5a0;
+      color: #7a3e1e;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      font-size: 13px;
-      padding: 14px 30px;
-      border-radius: 8px;
+      font-size: 12px;
+      padding: 14px 36px;
+      border-radius: 12px;
       text-decoration: none;
-      transition: background-color 0.3s ease;
     }
-    .btn:hover {
-      background-color: #ffea00;
+    .note {
+      font-size: 12px;
+      color: #c4a98a;
+      text-align: center;
+      margin: 0;
     }
     .footer {
-      background-color: #161616;
-      padding: 20px;
+      background-color: #fff8f4;
+      padding: 20px 30px;
       text-align: center;
       font-size: 11px;
-      color: #666666;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: #c4a98a;
+      border-top: 1px solid #f0d9cc;
+    }
+    .footer a {
+      color: #b07850;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
 
   <div class="email-container">
+
+    <!-- Header -->
     <div class="header">
-      <span style="font-weight: 900; color: #ffffff; font-size: 18px; letter-spacing: 2px;">
-        PROD-DM<span style="color: #ffbf00;">·</span>SHOP
-      </span>
+      <div class="logo">GLAM<span>·</span>SHOP</div>
+      <div class="header-sub">Tu tienda de maquillaje favorita</div>
     </div>
 
+    <!-- Content -->
     <div class="content">
-      <div class="welcome-text">Registro Confirmado</div>
-      <h1>¡Te damos la bienvenida al Dashboard!</h1>
-      
-      <p>Hola <strong>${name}</strong>,</p>
-      <p>Tu cuenta ha sido creada exitosamente dentro de la plataforma de control. A partir de este momento tienes acceso completo a todas las métricas de telemetría, manifiestos de carga y optimización de rutas en tiempo real.</p>
-      
-      <div class="user-box">
-        <p class="text-white"><strong>Nombre de usuario:</strong> ${name}</p>
-        <p class="text-white"><strong>Correo electrónico:</strong> ${email}</p>
-        <div class="timestamp text-white text-sm mt-2">
-          <p class="text-gray-500 text-xs mt-1">
+      <div class="badge">✨ Cuenta creada</div>
+      <h1>¡Bienvenida, ${name}!</h1>
 
-            Fecha de registro: ${new Date().toLocaleString("es-ES", {
-              timeZone: "America/Bogota",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-              second: "2-digit",
-            })}
-          </p>
-              </div>
-              <button class="btn" style="margin: 20px auto; display: block;">
-      <a class="link " href="https://user-manage-hu.vercel.app/">Ir al Dashboard</a>
-    </button>
+      <p>Nos alegra mucho que formes parte de nuestra comunidad. Tu cuenta ha sido creada exitosamente y ya puedes empezar a explorar todos nuestros productos.</p>
+
+      <!-- User info box -->
+      <div class="user-box">
+        <div class="user-box-row"><strong>Nombre:</strong> ${name}</div>
+        <div class="user-box-row"><strong>Correo:</strong> ${email}</div>
+        <div class="user-box-row"><strong>Fecha de registro:</strong> ${new Date().toLocaleString("es-ES", {
+          timeZone: "America/Bogota",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })}</div>
       </div>
 
-      <p style="font-size: 13px; margin: 0;">Si no solicitaste este registro, puedes ignorar este correo de forma segura.</p>
+      <hr class="divider" />
+
+      <p style="text-align:center; color: #6b4f3a; font-weight: 600;">¿Lista para descubrir tus nuevos favoritos?</p>
+
+      <div class="btn-container">
+        <a href="https://tu-tienda.com/products" class="btn">Explorar productos</a>
+      </div>
+
+      <p class="note">Si no creaste esta cuenta, puedes ignorar este correo.</p>
     </div>
 
+    <!-- Footer -->
     <div class="footer">
-      <p>
-              &copy; 2026 <a href="https://www.dhb-tech.com/" target="_blank" rel="noopener noreferrer">DHB-TECH</a>.
-              Solución digital para la gestión y registro de usuarios con acceso seguro al dashboard.
-Todos los derechos reservados.
-            </p>
+      &copy; 2026 GlamShop. Todos los derechos reservados.<br/>
+      <a href="https://tu-tienda.com">tu-tienda.com</a>
     </div>
-    
+
   </div>
 
 </body>

@@ -3,6 +3,7 @@ import Link from "next/link"
 import {ShoppingCart} from '@gravity-ui/icons';
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
+import { LanguageSelector } from "./LanguagesSelector";
 
 
 
@@ -22,7 +23,7 @@ export const NavbarHome = ()=>{
     router.push("/shopping");
   };
   return(
- <nav className="flex items-center justify-between px-10 py-3 bg-white border-b border-gray-200">
+ <nav className="flex items-center justify-between px-10 py-3 bg-[#f3cdaf] border-b border-gray-200">
       {/* Logo */}
       <div>
         <h1 className="text-3xl font-bold text-blue-700">
@@ -48,9 +49,7 @@ export const NavbarHome = ()=>{
       {/* Acciones */}
       <div className="flex items-center gap-6">
         {/* Idioma */}
-        <button className="text-blue-600 text-xl">
-          🌐Idioma
-        </button>
+       <LanguageSelector/> 
 
         {/* Carrito */}
         {/* <ShoppingCart width={40} height={40} className="text-blue-600" /> */}

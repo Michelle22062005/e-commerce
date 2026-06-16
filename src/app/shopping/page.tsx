@@ -1,6 +1,7 @@
 "use client";
 import { useAuth } from "@/src/context/AuthContext";
 import { useCart } from "@/src/context/CartContext";
+import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -54,7 +55,7 @@ export default function ShoppingPage() {
       <h1 className="text-2xl" style={{ color: "#6b4f3a" }}>
         Mi carrito
       </h1>
-
+      <Button onPress={()=>{router.push("/")}}>Volver</Button>
       {cart.length === 0 ? (
         <p style={{ color: "#b07850" }}>Tu carrito está vacío.</p>
       ) : (

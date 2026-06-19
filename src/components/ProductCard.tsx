@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 
 export const ProductCard = ({ _id, name, imageUrl, price }: IProductCard) => {
   const router = useRouter();
-   const { data:session } = useSession();
+  const { data:session } = useSession();
   const {isFavorite, toggleFavorite, authMessage } = useAuth();
   const { addToCart } = useCart();
   const {t} = useTranslation()

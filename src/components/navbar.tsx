@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
 import { LanguageSelector } from "./LanguagesSelector";
 import { useTranslation } from "@/src/context/i18nContext";
-
+import { signOut, useSession } from "next-auth/react";
 
 
 
 export const NavbarHome = ()=>{
-  const {user, logout}=useAuth()
+  const { data:session } = useSession();
   const router= useRouter()
   const {t}= useTranslation()
 
@@ -18,7 +18,7 @@ export const NavbarHome = ()=>{
     router.push("/login")
   }
   const shopping = () => {
-    if (!user) {
+    if (!session) {
       alert("Debes iniciar sesion primero para acceder al carrito");
       return;
     }
@@ -55,11 +55,11 @@ export const NavbarHome = ()=>{
 
         {/* Carrito */}
         {/* <ShoppingCart width={40} height={40} className="text-blue-600" /> */}
-        {user ? (
+        {session ? (
           <div className="flex items-center gap-4">
-           <span className="text-black"> {user.name}</span>
+           <span className="text-black"> {session.user?.name}</span>
           <ShoppingCart width={40} height={40} className="text-blue-600" onClick={shopping}/>
-          <Button isIconOnly variant="danger" onClick={logout}>Salir
+          <Button isIconOnly variant="danger" onClick={() => signOut({ callbackUrl: "/"})}>Salir
             <TrashBin/>
           </Button>
         </div>

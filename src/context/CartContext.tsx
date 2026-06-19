@@ -1,6 +1,6 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
-import { useAuth } from "@/src/context/AuthContext";
+import { useSession } from "next-auth/react";
 
 interface ICartItem {
   productId: string;
@@ -22,31 +22,32 @@ interface CartContextType {
 const CartContext = createContext<CartContextType>({} as CartContextType);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
+   const { data:session } = useSession();
   const [cart, setCart] = useState<ICartItem[]>([]);
+  const userKey= session?.user?.email
 
   // Cargar carrito del usuario al iniciar o cambiar de usuario
   useEffect(() => {
-    if (!user) {
+    if (!userKey) {
       setCart([]);
       return;
     }
     try {
-      const stored = localStorage.getItem(`cart_${user.id}`);
+      const stored = localStorage.getItem(`cart_${userKey}`);
       setCart(stored ? JSON.parse(stored) : []);
     } catch {
       setCart([]);
     }
-  }, [user]);
+  }, [userKey]);
 
   // Guardar en localStorage cada vez que cambia el carrito
   useEffect(() => {
-    if (!user) return;
-    localStorage.setItem(`cart_${user.id}`, JSON.stringify(cart));
-  }, [cart, user]);
+    if (!userKey) return;
+    localStorage.setItem(`cart_${userKey}`, JSON.stringify(cart));
+  }, [cart, userKey]);
 
   const addToCart = (item: ICartItem) => {
-    if (!user) return;
+    if (!userKey) return;
     setCart((prev) => {
       const exists = prev.find((i) => i.productId === item.productId);
       return exists
@@ -73,8 +74,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   };
 
   const clearCart = () => {
-    if (!user) return;
-    localStorage.removeItem(`cart_${user.id}`);
+    if (!userKey) return;
+    localStorage.removeItem(`cart_${userKey}`);
     setCart([]);
   };
 

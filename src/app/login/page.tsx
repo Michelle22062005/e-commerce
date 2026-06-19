@@ -1,33 +1,37 @@
 "use client";
 
-import { login as loginAPI } from "@/src/services/authService";
-import { useAuth } from "@/src/context/AuthContext";
+
 import {Button, Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
+import { signIn, useSession} from "next-auth/react"
 import { useSearchParams } from "next/navigation";
 import { useTranslation } from "@/src/context/i18nContext";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { LanguageSelector } from "@/src/components/LanguagesSelector";
 
 
 export default function PageLogin(){
-  
+  const {status}= useSession()
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError ]= useState("")
-  const { login } = useAuth();
+ 
   const searchParams = useSearchParams();
   const {t} = useTranslation()
 
+  useEffect(() =>{
+    if(status === "authenticated"){
+      router.push("/")
+    }
+  },[status, router])
+
+  if(status === "loading") return <p>Loading...</p>
+
   const handleSubmit =async ()=>{
-    console.log("ESTADO name:", name)  // ← agregar esto
-    console.log("ESTADO email:", email)
-    console.log("ESTADO password:", password)
-    setLoading(true);
-    console.log("VALORES:", { name, email, password })
+   
     if(!email || !password){
         setError("Todos los campos son obligatorios")
         setLoading(false)
@@ -38,19 +42,26 @@ export default function PageLogin(){
         setLoading(false)
         return
       }
+    setLoading(true);
+    
     try{
-      const result =await loginAPI(email, password);
-       login(result.user)
-      console.log(result)
-      // if(!result.user)
-      await Swal.fire({
-                  title:"Bienvenido",
-                  icon:"success",
-                  timer:2000,
-                  showConfirmButton:false
-                })
+      const result =await signIn("credentials",{
+        redirect: false,
+        email,
+        password
+      });
+      if(result?.error){
+        setError("Error o contraseña incorrectas")
+      }else{
+
+        await Swal.fire({
+                    title:"Bienvenido",
+                    icon:"success",
+                    timer:2000,
+                    showConfirmButton:false
+                  })
+      }
                 const returnTo = searchParams.get("returnTo") || "/";
-      // router.push("/")
           router.push(returnTo)
     }catch(error){
         setError("Error al iniciar sesión");
@@ -161,6 +172,7 @@ export default function PageLogin(){
           <Button
             type="button"
             className="h-14 rounded-xl bg-green-50 text-green-700"
+            onClick={() => signIn("google")}
           >
             Google
           </Button>

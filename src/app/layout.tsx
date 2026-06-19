@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { AuthProvider } from "@/src/context/AuthContext";
-
+import { Provider } from "react";
 import "./globals.css";
-import { CartProvider } from "../context/CartContext";
-import { I18NProvider } from "next/dist/server/lib/i18n-provider";
-import { I18nProvider } from "../context/i18nContext";
+import { Providers } from "./providers";
+
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,13 +32,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <I18nProvider>
-          <AuthProvider>
-          <CartProvider>
+        <Providers>
         {children}
-          </CartProvider>
-        </AuthProvider>
-        </I18nProvider>
+        </Providers>
+        
         
         </body>
     </html>

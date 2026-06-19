@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { useTranslation } from "@/src/context/i18nContext";
+import { useSession } from "next-auth/react";
 
 export const ProductCard = ({ _id, name, imageUrl, price }: IProductCard) => {
   const router = useRouter();
-  const {isFavorite, toggleFavorite, user, authMessage } = useAuth();
+   const { data:session } = useSession();
+  const {isFavorite, toggleFavorite, authMessage } = useAuth();
   const { addToCart } = useCart();
   const {t} = useTranslation()
 
@@ -17,7 +19,7 @@ export const ProductCard = ({ _id, name, imageUrl, price }: IProductCard) => {
     router.push(`/products/${_id}`);
   };
   const shopping = () => {
-    if (!user) {
+    if (!session) {
       alert("Debes iniciar sesion primero para acceder al carrito");
       return;
     }

@@ -1,21 +1,23 @@
 "use client";
-import { useAuth } from "@/src/context/AuthContext";
+
 import { useCart } from "@/src/context/CartContext";
 import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 export default function ShoppingPage() {
-  const { user } = useAuth();
+  const { data:session } = useSession();
   const { cart, removeFromCart, updateQuantity, clearCart, total } = useCart();
   const router = useRouter();
+  const userKey = session?.user?.email
 
   // Proteger la ruta
   useEffect(() => {
-    if (!user) router.push("/login");
-  }, [user]);
+    if (!session) router.push("/login");
+  }, [session]);
 
-  if (!user) return null;
+  if (!session) return null;
 
   const handleCompra = async () => {
     if (cart.length === 0) {
@@ -28,7 +30,7 @@ export default function ShoppingPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: user.id,
+          userId: userKey,
           items: cart.map((item) => ({
             productId: item.productId,
             name: item.name,

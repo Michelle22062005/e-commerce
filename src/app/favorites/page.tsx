@@ -6,32 +6,34 @@ import { ProductCard } from "@/src/components/ProductCard";
 import { IProductCard } from "@/src/types/product";
 import { getProduct } from "@/src/services/productService";
 import { Button } from "@heroui/react";
+import { useSession } from "next-auth/react";
 
 export default function PageFavorites(){
-    const {user, favorites}= useAuth();
+  const { favorites} = useAuth()
+  const { data:session } = useSession();
     const router= useRouter();
     const [products, setProducts]= useState<IProductCard[]>([])
     //Proteger la ruta
     useEffect(()=>{
-        if(!user){
+        if(!session){
             router.push("/login")
         }
-    },[user])
+    },[session])
 
     //Traer productos y filtrar favoritos
     useEffect(()=>{
-        if(!user) return;
+        if(!session) return;
 
         getProduct().then((data: IProductCard[])=>{
             const favProducts = data.filter((p) => favorites.includes(p._id));
             setProducts(favProducts)
         })
-    },[favorites, user])
+    },[favorites, session])
 
     const back=()=>{
         router.back()
     }
-    if(!user) return null
+    if(!session) return null
     return(
          <div className="flex flex-col gap-5 m-5">
       <h1 className="text-2xl" style={{ color: "#6b4f3a" }}>Mis favoritos</h1>

@@ -20,6 +20,7 @@
     "next": "^16.2.9",
     "next-auth": "^4.24.14",
     "nodemailer": "^7.0.13",
+    "openai": "^6.44.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "sweetalert2": "^11.26.25"

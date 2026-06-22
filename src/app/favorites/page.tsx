@@ -19,10 +19,12 @@ export default function PageFavorites(){
             router.push("/login")
         }
     },[session])
+    
 
     //Traer productos y filtrar favoritos
     useEffect(()=>{
         if(!session) return;
+
 
         getProduct().then((data: IProductCard[])=>{
             const favProducts = data.filter((p) => favorites.includes(p._id));

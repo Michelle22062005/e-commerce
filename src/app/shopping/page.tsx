@@ -5,12 +5,14 @@ import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { createSale } from "@/src/services/saleService";
+import Swal from "sweetalert2";
 
 export default function ShoppingPage() {
   const { data:session } = useSession();
   const { cart, removeFromCart, updateQuantity, clearCart, total } = useCart();
   const router = useRouter();
-  const userKey = session?.user?.email
+  const userKey = session?.user?.id
 
   // Proteger la ruta
   useEffect(() => {
@@ -26,26 +28,28 @@ export default function ShoppingPage() {
     }
 
     try {
-      const res = await fetch("/api/sales", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: userKey,
-          items: cart.map((item) => ({
-            productId: item.productId,
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity,
-          })),
-          total,
-        }),
-      });
+      await createSale(
+        userKey!,
+        cart.map((item) => ({
+          productId: item.productId,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        })),
+        total
+      )
 
-      if (!res.ok) throw new Error("Error al registrar la venta");
+     
 
       clearCart();
-      alert("¡Compra realizada con éxito!");
-      router.push("/products");
+       await Swal.fire({
+                          title:"¡Compra realizada con éxito!",
+                          icon:"success",
+                          timer:2000,
+                          showConfirmButton:false
+                        })
+      //alert("¡Compra realizada con éxito!");
+      router.push("/");
     } catch (error) {
       console.error(error);
       alert("Hubo un error al procesar la compra");

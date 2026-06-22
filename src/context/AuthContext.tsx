@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { getFavorite, createFavorite, deleteFavorite } from "@/src/services/favoriteService";
 
 
 interface AuthContextType {
@@ -17,37 +18,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [authMessage, setAuthMessage] = useState("");
 
-  useEffect(() => {
-    if(session?.user?.email){
-    try {
-        const storedFavs = localStorage.getItem(`favorites_${session.user.email}`);
-        if (storedFavs) setFavorites( JSON.parse(storedFavs));
+  // useEffect(() => {
+    
+  //   if(session?.user?.email){
+  //   try {
+  //       const storedFavs = localStorage.getItem(`favorites_${session.user.email}`);
+  //       if (storedFavs) setFavorites( JSON.parse(storedFavs));
       
-    } catch (error) {
-      console.error("Error al leer sesión:", error);
-      localStorage.removeItem("user"); // limpia el valor corrupto
-    }
-  }else{
-    setFavorites([])
-  }
+  //   } catch (error) {
+  //     console.error("Error al leer sesión:", error);
+  //     localStorage.removeItem("user"); // limpia el valor corrupto
+  //   }
+  // }else{
+  //   setFavorites([])
+  // }
+  // }, [session]);
+
+useEffect(() => {
+    const loadFavorites = async () => {
+      if (!session?.user?.id) {
+        setFavorites([]);
+        return;
+      }
+      const data = await getFavorite(session.user.id);
+      // data trae objetos { productId: { _id, name, ... } }, extraemos solo el _id
+      const ids = data.map((fav: any) => fav.productId._id);
+      setFavorites(ids);
+    };
+
+    loadFavorites();
   }, [session]);
 
-
-
-  const toggleFavorite = (productId: string) => {
-    if (!session) {
+const toggleFavorite = async (productId: string) => {
+    if (!session?.user?.id) {
       setAuthMessage("Debes iniciar sesión para agregar a favoritos");
-      setTimeout(() => setAuthMessage(""), 3000); // desaparece a los 3 segundos
+      setTimeout(() => setAuthMessage(""), 3000);
       return;
     }
-    setFavorites((prev) => {
-      const updated = prev.includes(productId)
-        ? prev.filter((id) => id !== productId) // quitar
-        : [...prev, productId]; // agregar
 
-      localStorage.setItem(`favorites_${session.user?.email}`, JSON.stringify(updated));
-      return updated;
-    });
+    const userId = session.user.id;
+    const isFav = favorites.includes(productId);
+
+    try {
+      if (isFav) {
+        await deleteFavorite(userId, productId);
+        setFavorites((prev) => prev.filter((id) => id !== productId));
+      } else {
+        await createFavorite(userId, productId);
+        setFavorites((prev) => [...prev, productId]);
+      }
+    } catch (error) {
+      console.error("Error al actualizar favorito", error);
+    }
   };
 
   const isFavorite = (productId: string) => favorites.includes(productId);
